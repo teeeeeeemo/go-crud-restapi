@@ -22,17 +22,17 @@ type User struct {
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
-/* 비밀번호로 hash 값 생성 */
+/* 비밀번호로 hash 값 생성 함수 */
 func Hash(password string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 }
 
-/* 비밀번호 검증 */
+/* 비밀번호 검증 함수 */
 func VerifyPassword(hashedPassword, password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-/*  비밀번호 hash 값 생성 */
+/*  비밀번호 hash 값 생성 메서드 */
 func (u *User) BeforeSave() error {
 	hashedPassword, err := Hash(u.Password)
 	if err != nil {
@@ -42,7 +42,7 @@ func (u *User) BeforeSave() error {
 	return nil
 }
 
-/* user 준비 */
+/* user 준비 메서드 */
 func (u *User) Prepare() {
 	u.ID = 0
 	u.Nickname = html.EscapeString(strings.TrimSpace(u.Nickname))
@@ -51,7 +51,7 @@ func (u *User) Prepare() {
 	u.UpdatedAt = time.Now()
 }
 
-/* user 유효성 검사 */
+/* user 유효성 검사 메서드 */
 func (u *User) Validate(action string) error {
 	switch strings.ToLower(action) {
 	case "update":
@@ -101,9 +101,10 @@ func (u *User) Validate(action string) error {
 	}
 }
 
-/* user 저장 */
+/* user 저장 메서드 */
 func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 	var err error
+	/* DB 삽입: user */
 	err = db.Debug().Create(&u).Error
 	if err != nil {
 		return &User{}, err
@@ -111,7 +112,7 @@ func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 	return u, nil
 }
 
-/* user 목록 조회 */
+/* user 목록 조회 메서드 */
 func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 	var err error
 	users := []User{}
@@ -122,7 +123,7 @@ func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 	return &users, err
 }
 
-/* user 상세 조회 */
+/* user 상세 조회 메서드 */
 func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 	var err error
 	err = db.Debug().Model(User{}).Where("id = ?", uid).Take(&u).Error
@@ -135,7 +136,7 @@ func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 	return u, err
 }
 
-/* user 수정 */
+/* user 수정 메서드 */
 func (u *User) UpdateAUser(db *gorm.DB, uid uint32) (*User, error) {
 
 	// To hash the password
@@ -164,7 +165,7 @@ func (u *User) UpdateAUser(db *gorm.DB, uid uint32) (*User, error) {
 
 }
 
-/* user 삭제 */
+/* user 삭제 메서드 */
 func (u *User) DeleteaUser(db *gorm.DB, uid uint32) (int64, error) {
 	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).Delete(&User{})
 

@@ -44,7 +44,12 @@ func Load(db *gorm.DB) {
 		log.Println("drop table 완료")
 	}
 
-	/* table 자동 마이그레이션 */
+	/* table 자동 마이그레이션
+	AutoMigrate 메서드:
+	- 모델 구조체의 변경 사항을 인지해서 DB 테이블에 반영
+	- 테이블이 없으면 새로 생성하고, 이미 있으면 테이블 컬럼과 모델 구조체의 필드를 비교하여 추가된 필드를 새 컬럼으로 생성
+	- 기존 컬럼의 변경된 속성은 반영되지 않음 */
+	// err = db.Debug().AutoMigrate(&models.User{}, &models.Post{}).Error
 	err = db.Debug().AutoMigrate(&models.User{}, &models.Post{}).Error
 	if err != nil {
 		log.Fatalf("cannot migrate table: %v", err)
