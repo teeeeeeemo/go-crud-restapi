@@ -62,6 +62,7 @@ func (p *Post) SavePost(db *gorm.DB) (*Post, error) {
 	return p, nil
 }
 
+// TODO pagination
 /* post 목록 조회 */
 func (p *Post) FindAllPosts(db *gorm.DB) (*[]Post, error) {
 	var err error

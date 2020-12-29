@@ -112,10 +112,12 @@ func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 	return u, nil
 }
 
+// TODO pagination
 /* user 목록 조회 메서드 */
 func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 	var err error
 	users := []User{}
+	/* DB 조회: user 목록, 100개 */
 	err = db.Debug().Model(&User{}).Limit(100).Find(&users).Error
 	if err != nil {
 		return &[]User{}, err
@@ -126,6 +128,7 @@ func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 /* user 상세 조회 메서드 */
 func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 	var err error
+	/* DB 조회: user by id */
 	err = db.Debug().Model(User{}).Where("id = ?", uid).Take(&u).Error
 	if err != nil {
 		return &User{}, err
