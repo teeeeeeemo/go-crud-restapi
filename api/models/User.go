@@ -32,7 +32,7 @@ func VerifyPassword(hashedPassword, password string) error {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 }
 
-/*  비밀번호 저장 전 hash 값 생성 */
+/*  비밀번호 hash 값 생성 */
 func (u *User) BeforeSave() error {
 	hashedPassword, err := Hash(u.Password)
 	if err != nil {
@@ -42,7 +42,7 @@ func (u *User) BeforeSave() error {
 	return nil
 }
 
-/* user 저장 전 준비 */
+/* user 준비 */
 func (u *User) Prepare() {
 	u.ID = 0
 	u.Nickname = html.EscapeString(strings.TrimSpace(u.Nickname))
