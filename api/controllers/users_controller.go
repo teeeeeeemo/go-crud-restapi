@@ -2,18 +2,21 @@ package controllers
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/teeeeeeemo/go-crud-restapi/api/auth"
 	"github.com/teeeeeeemo/go-crud-restapi/api/models"
 	"github.com/teeeeeeemo/go-crud-restapi/api/responses"
 	"github.com/teeeeeeemo/go-crud-restapi/api/utils/formaterror"
 )
 
-/* user 생성 */
+/* user 생성 메서드 */
 func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	/* 요청의 바디를 모두 읽기 */
@@ -53,7 +56,7 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
-/* user 목록 조회 */
+/* user 목록 조회 메서드 */
 func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
 
 	/* user 객체 할당 */
@@ -68,7 +71,7 @@ func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
 	responses.JSON(w, http.StatusOK, users)
 }
 
-/* user 상세 조회 */
+/* user 상세 조회 메서드 */
 func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	/* Vars returns the route variables for the current request, if any.
@@ -90,4 +93,68 @@ func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	responses.JSON(w, http.StatusOK, userGotten)
+}
+
+/* user 수정 메서드 */
+func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
+
+	/* Vars returns the route variables for the current requests, if any.
+	Vars는 현재 요청에 대한 경로 변수 반환함 */
+	vars := mux.Vars(r)
+	/* string -> uint 변환 */
+	uid, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+
+	/* 요청의 바디를 모두 읽기 */
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	/* user 객체 할당 */
+	user := models.User{}
+	/* body의 데이터를 user로 언마샬링 */
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	/* 토큰 아이디 추출 */
+	tokenID, err := auth.ExtractTokenID(r)
+	log.Printf("@@@tokenID: %d", tokenID)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+
+	/* 토큰 아이디 검증 */
+	if tokenID != uint32(uid) {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
+		return
+	}
+
+	/* user 준비 */
+	user.Prepare()
+	/* user 유효성 검사 */
+	err = user.Validate("update")
+	if err != nil {
+		responses.ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	/* user 수정 */
+	updatedUser, err := user.UpdateAUser(server.DB, uint32(uid))
+	if err != nil {
+		formattedError := formaterror.FormatError(err.Error())
+		responses.ERROR(w, http.StatusInternalServerError, formattedError)
+		return
+	}
+
+	responses.JSON(w, http.StatusOK, updatedUser)
+
 }
