@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 
@@ -126,7 +125,6 @@ func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	/* 토큰 아이디 추출 */
 	tokenID, err := auth.ExtractTokenID(r)
-	log.Printf("@@@tokenID: %d", tokenID)
 	if err != nil {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
 		return
@@ -156,5 +154,47 @@ func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responses.JSON(w, http.StatusOK, updatedUser)
+
+}
+
+/* user 삭제 메서드 */
+func (server *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
+
+	/* Vars returns the route variables for the current request, if any.
+	Vars는 현재 요청에 대한 경로 변수 반환함 */
+	vars := mux.Vars(r)
+
+	/* user 객체 할당 */
+	user := models.User{}
+
+	/* string -> uint 변환 */
+	uid, err := strconv.ParseUint(vars["id"], 10, 32)
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+
+	/* 토큰 아이디 추출 */
+	tokenID, err := auth.ExtractTokenID(r)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+
+	/* 토큰 아이디 검증 */
+	if tokenID != 0 && tokenID != uint32(uid) {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New(http.StatusText(http.StatusUnauthorized)))
+		return
+	}
+
+	/* user 삭제 */
+	_, err = user.DeleteAUser(server.DB, uint32(uid))
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	w.Header().Set("Entity", fmt.Sprintf("%d", uid))
+	responses.JSON(w, http.StatusNoContent, "")
 
 }
