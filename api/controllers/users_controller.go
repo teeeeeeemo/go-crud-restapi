@@ -16,6 +16,14 @@ import (
 )
 
 /* user 생성 메서드 */
+// @Summary Create a User
+// @Description Create a user with the input payload
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body models.User true "Create user"
+// @Success 200 {object} models.User
+// @Router /users [post]
 func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	/* 요청의 바디를 모두 읽기 */
@@ -56,6 +64,13 @@ func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 /* user 목록 조회 메서드 */
+// @Summary Get User List
+// @Description 사용자 목록 조회
+// @Tags users
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.User
+// @Router /users [get]
 func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
 
 	/* user 객체 할당 */
@@ -71,6 +86,14 @@ func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 /* user 상세 조회 메서드 */
+// @Summary Show User Details
+// @Description 사용자 상세 조회
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "user id"
+// @Success 200 {object} models.User
+// @Router /users/{id} [get]
 func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	/* Vars returns the route variables for the current request, if any.
@@ -95,6 +118,15 @@ func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 /* user 수정 메서드 */
+// @Summary Update a User
+// @Description Update a user with the input payload
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id path string true "user id"
+// @Param user body models.User true "Update user"
+// @Success 200 {object} models.User
+// @Router /users/{id} [put]
 func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	/* Vars returns the route variables for the current requests, if any.
@@ -158,6 +190,14 @@ func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 /* user 삭제 메서드 */
+// @Summary Delete a User
+// @Description 사용자 삭제
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param id query string true "user id"
+// @Success 204
+// @Router /users/{id} [delete]
 func (server *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 	/* Vars returns the route variables for the current request, if any.

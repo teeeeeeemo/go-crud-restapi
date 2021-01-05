@@ -1,6 +1,10 @@
 package controllers
 
-import "github.com/teeeeeeemo/go-crud-restapi/api/middlewares"
+import (
+	httpSwagger "github.com/swaggo/http-swagger"
+	"github.com/teeeeeeemo/go-crud-restapi/api/middlewares"
+	_ "github.com/teeeeeeemo/go-crud-restapi/docs"
+)
 
 func (s *Server) initializeRoutes() {
 
@@ -18,5 +22,8 @@ func (s *Server) initializeRoutes() {
 	s.Router.HandleFunc("/users/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.DeleteUser))).Methods("DELETE")
 
 	// Posts routes
+
+	// Swagger
+	s.Router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)
 
 }

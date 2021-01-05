@@ -14,12 +14,12 @@ import (
 
 /* user 구조체 */
 type User struct {
-	ID        uint32    `gorm:"primary_key;auto_increment" json:"id,string"`
-	Nickname  string    `gorm:"size:255;not null;unique" json:"nickname"`
-	Email     string    `gorm:"size:100;not null;unique" json:"email"`
-	Password  string    `gorm:"size:100;not null;" json:"password"`
-	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
+	ID        uint32    `gorm:"primary_key;auto_increment" json:"id,string"` // 아이디
+	Nickname  string    `gorm:"size:255;not null;unique" json:"nickname"`    //  닉네임
+	Email     string    `gorm:"size:100;not null;unique" json:"email"`       // 이메일
+	Password  string    `gorm:"size:100;not null;" json:"password"`          // 비밀번호
+	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"` // 생성시간
+	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"` // 수정시간
 }
 
 /* 비밀번호로 hash 값 생성 함수 */
