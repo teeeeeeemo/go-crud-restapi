@@ -83,6 +83,7 @@ func (server *Server) GetUsers(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	responses.JSON(w, http.StatusOK, users)
+
 }
 
 /* user 상세 조회 메서드 */
@@ -115,6 +116,7 @@ func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	responses.JSON(w, http.StatusOK, userGotten)
+
 }
 
 /* user 수정 메서드 */
