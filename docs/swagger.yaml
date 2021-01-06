@@ -1,5 +1,31 @@
 basePath: /
 definitions:
+  models.Post:
+    properties:
+      author:
+        $ref: '#/definitions/models.User'
+        description: 작성자
+        type: object
+      author_id:
+        description: 작성자 아이디
+        type: integer
+      content:
+        description: 내용
+        type: string
+      created_at:
+        description: 생성시간
+        type: string
+      id:
+        description: 아이디
+        example: "0"
+        type: string
+      title:
+        description: 제목
+        type: string
+      updated_at:
+        description: 수정시간
+        type: string
+    type: object
   models.User:
     properties:
       created_at:
@@ -35,6 +61,23 @@ info:
   title: go rest api
   version: "0.1"
 paths:
+  /posts:
+    post:
+      consumes:
+      - application/json
+      description: Create a post with the input payload
+      parameters:
+      - description: Create post
+        in: body
+        name: post
+        required: true
+        schema:
+          $ref: '#/definitions/models.Post'
+      produces:
+      - application/json
+      summary: Create a Post
+      tags:
+      - posts
   /users:
     get:
       consumes:
@@ -66,8 +109,8 @@ paths:
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "201":
+          description: Created
           schema:
             $ref: '#/definitions/models.User'
       summary: Create a User

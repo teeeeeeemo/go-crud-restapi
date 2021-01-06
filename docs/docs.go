@@ -32,6 +32,32 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/posts": {
+            "post": {
+                "description": "Create a post with the input payload",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Create a Post",
+                "parameters": [
+                    {
+                        "description": "Create post",
+                        "name": "post",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Post"
+                        }
+                    }
+                ]
+            }
+        },
         "/users": {
             "get": {
                 "description": "사용자 목록 조회",
@@ -81,8 +107,8 @@ var doc = `{
                     }
                 ],
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "201": {
+                        "description": "Created",
                         "schema": {
                             "$ref": "#/definitions/models.User"
                         }
@@ -190,6 +216,41 @@ var doc = `{
         }
     },
     "definitions": {
+        "models.Post": {
+            "type": "object",
+            "properties": {
+                "author": {
+                    "description": "작성자",
+                    "type": "object",
+                    "$ref": "#/definitions/models.User"
+                },
+                "author_id": {
+                    "description": "작성자 아이디",
+                    "type": "integer"
+                },
+                "content": {
+                    "description": "내용",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "생성시간",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "아이디",
+                    "type": "string",
+                    "example": "0"
+                },
+                "title": {
+                    "description": "제목",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "수정시간",
+                    "type": "string"
+                }
+            }
+        },
         "models.User": {
             "type": "object",
             "properties": {
