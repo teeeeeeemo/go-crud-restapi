@@ -72,3 +72,26 @@ func (server *Server) CreatePost(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Location", fmt.Sprintf("%s%s/%d", r.Host, r.URL.Path, postCreated.ID))
 	responses.JSON(w, http.StatusCreated, postCreated)
 }
+
+/* post 목록 조회 메서드 */
+// @Summary Get Post List
+// @Description 포스트 목록 조회
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Success 200 {array} models.Post
+// @Router /posts [get]
+func (server *Server) GetPosts(w http.ResponseWriter, r *http.Request) {
+
+	/* post 객체 할당 */
+	post := models.Post{}
+
+	/* post 목록 조회 */
+	posts, err := post.FindAllPosts(server.DB)
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	responses.JSON(w, http.StatusOK, posts)
+
+}

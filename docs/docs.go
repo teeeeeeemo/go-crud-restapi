@@ -33,6 +33,30 @@ var doc = `{
     "basePath": "{{.BasePath}}",
     "paths": {
         "/posts": {
+            "get": {
+                "description": "포스트 목록 조회",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Get Post List",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Post"
+                            }
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "Create a post with the input payload",
                 "consumes": [
@@ -226,7 +250,8 @@ var doc = `{
                 },
                 "author_id": {
                     "description": "작성자 아이디",
-                    "type": "integer"
+                    "type": "string",
+                    "example": "0"
                 },
                 "content": {
                     "description": "내용",
