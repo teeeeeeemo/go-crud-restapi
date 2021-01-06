@@ -22,7 +22,7 @@ import (
 // @Accept json
 // @Produce json
 // @Param user body models.User true "Create user"
-// @Success 200 {object} models.User
+// @Success 201 {object} models.User
 // @Router /users [post]
 func (server *Server) CreateUser(w http.ResponseWriter, r *http.Request) {
 
