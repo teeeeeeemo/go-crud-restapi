@@ -24,36 +24,46 @@ type User struct {
 
 /* 비밀번호로 hash 값 생성 함수 */
 func Hash(password string) ([]byte, error) {
+
 	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+
 }
 
 /* 비밀번호 검증 함수 */
 func VerifyPassword(hashedPassword, password string) error {
+
 	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
+
 }
 
 /*  비밀번호 hash 값 생성 메서드 */
 func (u *User) BeforeSave() error {
+
 	hashedPassword, err := Hash(u.Password)
 	if err != nil {
 		return err
 	}
 	u.Password = string(hashedPassword)
 	return nil
+
 }
 
 /* user 준비 메서드 */
 func (u *User) Prepare() {
+
 	u.ID = 0
 	u.Nickname = html.EscapeString(strings.TrimSpace(u.Nickname))
 	u.Email = html.EscapeString(strings.TrimSpace(u.Email))
 	u.CreatedAt = time.Now()
 	u.UpdatedAt = time.Now()
+
 }
 
 /* user 유효성 검사 메서드 */
 func (u *User) Validate(action string) error {
+
 	switch strings.ToLower(action) {
+
 	case "update":
 		if u.Nickname == "" {
 			return errors.New("Required Nickname")
@@ -67,7 +77,6 @@ func (u *User) Validate(action string) error {
 		if err := checkmail.ValidateFormat(u.Email); err != nil {
 			return errors.New("Invalid Email")
 		}
-
 		return nil
 
 	case "login":
@@ -80,7 +89,6 @@ func (u *User) Validate(action string) error {
 		if err := checkmail.ValidateFormat(u.Email); err != nil {
 			return errors.New("Invalid Email")
 		}
-
 		return nil
 
 	default:
@@ -99,10 +107,12 @@ func (u *User) Validate(action string) error {
 		return nil
 
 	}
+
 }
 
 /* user 저장 메서드 */
 func (u *User) SaveUser(db *gorm.DB) (*User, error) {
+
 	var err error
 	/* DB 삽입: user */
 	err = db.Debug().Create(&u).Error
@@ -110,11 +120,13 @@ func (u *User) SaveUser(db *gorm.DB) (*User, error) {
 		return &User{}, err
 	}
 	return u, nil
+
 }
 
 // TODO pagination
 /* user 목록 조회 메서드 */
 func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
+
 	var err error
 	users := []User{}
 	/* DB 조회: user 목록, 100개 */
@@ -123,10 +135,12 @@ func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 		return &[]User{}, err
 	}
 	return &users, err
+
 }
 
 /* user 상세 조회 메서드 */
 func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
+
 	var err error
 	/* DB 조회: user by id */
 	err = db.Debug().Model(User{}).Where("id = ?", uid).Take(&u).Error
@@ -137,6 +151,7 @@ func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 		return &User{}, errors.New("User Not Found")
 	}
 	return u, err
+
 }
 
 /* user 수정 메서드 */
@@ -147,6 +162,8 @@ func (u *User) UpdateAUser(db *gorm.DB, uid uint32) (*User, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	/* DB 수정: user by id */
 	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).UpdateColumns(
 		map[string]interface{}{
 			"password":   u.Password,
@@ -170,10 +187,13 @@ func (u *User) UpdateAUser(db *gorm.DB, uid uint32) (*User, error) {
 
 /* user 삭제 메서드 */
 func (u *User) DeleteAUser(db *gorm.DB, uid uint32) (int64, error) {
+
+	/* DB 삭제: user by id */
 	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).Delete(&User{})
 
 	if db.Error != nil {
 		return 0, db.Error
 	}
 	return db.RowsAffected, nil
+
 }
