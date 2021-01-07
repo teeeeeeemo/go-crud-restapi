@@ -100,6 +100,9 @@ func (p *Post) FindPostByID(db *gorm.DB, pid uint64) (*Post, error) {
 	/* DB 조회: post by id */
 	err = db.Debug().Model(&Post{}).Where("id = ?", pid).Take(&p).Error
 	if err != nil {
+		if gorm.IsRecordNotFoundError(err) {
+			return &Post{}, errors.New("Post not found")
+		}
 		return &Post{}, err
 	}
 	if p.ID != 0 {
