@@ -82,6 +82,38 @@ var doc = `{
                 ]
             }
         },
+        "/posts/{id}": {
+            "get": {
+                "description": "포스트 상세 조회",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "posts"
+                ],
+                "summary": "Show Post Details",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "post id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Post"
+                        }
+                    }
+                }
+            }
+        },
         "/users": {
             "get": {
                 "description": "사용자 목록 조회",

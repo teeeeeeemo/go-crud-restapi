@@ -24,6 +24,7 @@ func (s *Server) initializeRoutes() {
 	// Posts routes
 	s.Router.HandleFunc("/posts", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.CreatePost))).Methods("POST")
 	s.Router.HandleFunc("/posts", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.GetPosts))).Methods("GET")
+	s.Router.HandleFunc("/posts/{id}", middlewares.SetMiddlewareJSON(middlewares.SetMiddlewareAuthentication(s.GetPost))).Methods("GET")
 
 	// Swagger
 	s.Router.PathPrefix("/swagger").Handler(httpSwagger.WrapHandler)

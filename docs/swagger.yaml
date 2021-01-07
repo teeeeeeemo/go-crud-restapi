@@ -95,6 +95,27 @@ paths:
       summary: Create a Post
       tags:
       - posts
+  /posts/{id}:
+    get:
+      consumes:
+      - application/json
+      description: 포스트 상세 조회
+      parameters:
+      - description: post id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Post'
+      summary: Show Post Details
+      tags:
+      - posts
   /users:
     get:
       consumes:

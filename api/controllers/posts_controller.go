@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/teeeeeeemo/go-crud-restapi/api/auth"
 	"github.com/teeeeeeemo/go-crud-restapi/api/models"
 	"github.com/teeeeeeemo/go-crud-restapi/api/responses"
@@ -93,5 +95,39 @@ func (server *Server) GetPosts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	responses.JSON(w, http.StatusOK, posts)
+
+}
+
+/* post 상세 조회 메서드 */
+// @Summary Show Post Details
+// @Description 포스트 상세 조회
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param id path string true "post id"
+// @Success 200 {object} models.Post
+// @Router /posts/{id} [get]
+func (server *Server) GetPost(w http.ResponseWriter, r *http.Request) {
+
+	/* Vars returns the route variables for the current request, if any.
+	Vars는 현재 요청에 대한 경로 변수 반환함 */
+	vars := mux.Vars(r)
+	/* string -> uint 변환 */
+	pid, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+
+	/* post 객체 할당 */
+	post := models.Post{}
+
+	/* id로 post 조회 */
+	postReceived, err := post.FindPostByID(server.DB, pid)
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+	responses.JSON(w, http.StatusOK, postReceived)
 
 }
