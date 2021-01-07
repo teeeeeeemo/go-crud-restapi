@@ -125,6 +125,7 @@ func (server *Server) GetUser(w http.ResponseWriter, r *http.Request) {
 // @Tags users
 // @Accept json
 // @Produce json
+// @Param token header string true "bearer token"
 // @Param id path string true "user id"
 // @Param user body models.User true "Update user"
 // @Success 200 {object} models.User
@@ -197,7 +198,8 @@ func (server *Server) UpdateUser(w http.ResponseWriter, r *http.Request) {
 // @Tags users
 // @Accept json
 // @Produce json
-// @Param id query string true "user id"
+// @Param token header string true "bearer token"
+// @Param id path string true "user id"
 // @Success 204
 // @Router /users/{id} [delete]
 func (server *Server) DeleteUser(w http.ResponseWriter, r *http.Request) {

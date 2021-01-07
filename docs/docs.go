@@ -45,6 +45,15 @@ var doc = `{
                     "posts"
                 ],
                 "summary": "Get Post List",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -71,6 +80,13 @@ var doc = `{
                 "summary": "Create a Post",
                 "parameters": [
                     {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
                         "description": "Create post",
                         "name": "post",
                         "in": "body",
@@ -96,6 +112,13 @@ var doc = `{
                 ],
                 "summary": "Show Post Details",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "post id",
@@ -126,6 +149,13 @@ var doc = `{
                 ],
                 "summary": "Update a Post",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "post id",
@@ -165,6 +195,13 @@ var doc = `{
                 ],
                 "summary": "Delete a Post",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "bearer token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "string",
                         "description": "bearer token",
@@ -291,6 +328,13 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "bearer token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "user id",
                         "name": "id",
                         "in": "path",
@@ -330,9 +374,16 @@ var doc = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "bearer token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
                         "description": "user id",
                         "name": "id",
-                        "in": "query",
+                        "in": "path",
                         "required": true
                     }
                 ],

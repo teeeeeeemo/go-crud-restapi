@@ -21,6 +21,7 @@ import (
 // @Tags posts
 // @Accept json
 // @Produce json
+// @Param token header string true "bearer token"
 // @Param post body models.Post true "Create post"
 // @Sucess 201 {object} models.Post
 // @Router /posts [post]
@@ -81,6 +82,7 @@ func (server *Server) CreatePost(w http.ResponseWriter, r *http.Request) {
 // @Tags posts
 // @Accept json
 // @Produce json
+// @Param token header string true "bearer token"
 // @Success 200 {array} models.Post
 // @Router /posts [get]
 func (server *Server) GetPosts(w http.ResponseWriter, r *http.Request) {
@@ -104,6 +106,7 @@ func (server *Server) GetPosts(w http.ResponseWriter, r *http.Request) {
 // @Tags posts
 // @Accept json
 // @Produce json
+// @Param token header string true "bearer token"
 // @Param id path string true "post id"
 // @Success 200 {object} models.Post
 // @Router /posts/{id} [get]
@@ -138,6 +141,7 @@ func (server *Server) GetPost(w http.ResponseWriter, r *http.Request) {
 // @Tags posts
 // @Accept json
 // @Produce json
+// @Param token header string true "bearer token"
 // @Param id path string true "post id"
 // @Param post body models.Post true "Update post"
 // @Success 200 {object} models.Post
@@ -232,6 +236,7 @@ func (server *Server) UpdatePost(w http.ResponseWriter, r *http.Request) {
 // @Tags posts
 // @Accept json
 // @Produce json
+// @Param token header string true "bearer token"
 // @Param token header string true "bearer token"
 // @Param id path string true "post id"
 // @Success 204

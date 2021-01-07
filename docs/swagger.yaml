@@ -67,6 +67,12 @@ paths:
       consumes:
       - application/json
       description: 포스트 목록 조회
+      parameters:
+      - description: bearer token
+        in: header
+        name: token
+        required: true
+        type: string
       produces:
       - application/json
       responses:
@@ -84,6 +90,11 @@ paths:
       - application/json
       description: Create a post with the input payload
       parameters:
+      - description: bearer token
+        in: header
+        name: token
+        required: true
+        type: string
       - description: Create post
         in: body
         name: post
@@ -101,6 +112,11 @@ paths:
       - application/json
       description: 포스트 삭제
       parameters:
+      - description: bearer token
+        in: header
+        name: token
+        required: true
+        type: string
       - description: bearer token
         in: header
         name: token
@@ -124,6 +140,11 @@ paths:
       - application/json
       description: 포스트 상세 조회
       parameters:
+      - description: bearer token
+        in: header
+        name: token
+        required: true
+        type: string
       - description: post id
         in: path
         name: id
@@ -144,6 +165,11 @@ paths:
       - application/json
       description: Update a post with the input payload
       parameters:
+      - description: bearer token
+        in: header
+        name: token
+        required: true
+        type: string
       - description: post id
         in: path
         name: id
@@ -209,8 +235,13 @@ paths:
       - application/json
       description: 사용자 삭제
       parameters:
+      - description: bearer token
+        in: header
+        name: token
+        required: true
+        type: string
       - description: user id
-        in: query
+        in: path
         name: id
         required: true
         type: string
@@ -247,6 +278,11 @@ paths:
       - application/json
       description: Update a user with the input payload
       parameters:
+      - description: bearer token
+        in: header
+        name: token
+        required: true
+        type: string
       - description: user id
         in: path
         name: id
