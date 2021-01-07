@@ -96,6 +96,29 @@ paths:
       tags:
       - posts
   /posts/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 포스트 삭제
+      parameters:
+      - description: bearer token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: post id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+      summary: Delete a Post
+      tags:
+      - posts
     get:
       consumes:
       - application/json

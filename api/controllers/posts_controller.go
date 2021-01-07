@@ -173,7 +173,7 @@ func (server *Server) UpdatePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	/* user id와 post 작성자 id가 다를 경우 */
+	/* 토큰에서 추출한 user id와 post 작성자 id 동일 여부 체크 */
 	if uid != postReceived.AuthorID {
 		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
 		return
@@ -223,5 +223,63 @@ func (server *Server) UpdatePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responses.JSON(w, http.StatusOK, postUpdated)
+
+}
+
+/* post 삭제 메서드 */
+// @Summary Delete a Post
+// @Description 포스트 삭제
+// @Tags posts
+// @Accept json
+// @Produce json
+// @Param token header string true "bearer token"
+// @Param id path string true "post id"
+// @Success 204
+// @Router /posts/{id} [delete]
+func (server *Server) DeletePost(w http.ResponseWriter, r *http.Request) {
+
+	/* Vars returns the route variables for the current request, if any.
+	Vars는 현재 요청에 대한 경로 변수 반환함 */
+	vars := mux.Vars(r)
+
+	/* post id 유효성 검사 */
+	/* string -> uint 변환 */
+	pid, err := strconv.ParseUint(vars["id"], 10, 64)
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+
+	/* 토큰 아이디 추출 */
+	uid, err := auth.ExtractTokenID(r)
+	if err != nil {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+
+	/* post 객체 할당 */
+	post := models.Post{}
+	/* id로 post 조회 */
+	postExisted, err := post.FindPostByID(server.DB, pid)
+	if err != nil {
+		responses.ERROR(w, http.StatusInternalServerError, err)
+		return
+	}
+
+	/* 토큰에서 추출한 user id와 post 작성자 id 동일 여부 체크 */
+	if uid != postExisted.AuthorID {
+		responses.ERROR(w, http.StatusUnauthorized, errors.New("Unauthorized"))
+		return
+	}
+
+	/* post 삭제 */
+	_, err = post.DeleteAPost(server.DB, pid, uid)
+	if err != nil {
+		responses.ERROR(w, http.StatusBadRequest, err)
+		return
+	}
+
+	w.Header().Set("Entity", fmt.Sprintf("%d", pid))
+	responses.JSON(w, http.StatusNoContent, "")
 
 }
