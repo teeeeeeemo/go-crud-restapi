@@ -11,13 +11,13 @@ import (
 
 /* post 구조체 */
 type Post struct {
-	ID        uint64    `gorm:"primary_key;auto_increment" json:"id,string"` // 아이디
-	Title     string    `gorm:"size:255;not null;" json:"title"`             // 제목
-	Content   string    `gorm:"size:255;not null;" json:"content"`           // 내용
-	Author    User      `json:"author"`                                      // 작성자
-	AuthorID  uint32    `gorm:"not null" json:"author_id,string"`            // 작성자 아이디
-	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"` // 생성시간
-	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"` // 수정시간
+	ID        uint64    `gorm:"primary_key;auto_increment" json:"id,string"`                  // 아이디
+	Title     string    `gorm:"size:255;not null;" json:"title"`                              // 제목
+	Content   string    `gorm:"size:255;not null;" json:"content"`                            // 내용
+	Author    User      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;" json:"author"` // 작성자
+	AuthorID  uint32    `gorm:"not null" json:"author_id,string"`                             // 작성자 아이디
+	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`                  // 생성시간
+	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`                  // 수정시간
 }
 
 /* post 준비 메서드 */
